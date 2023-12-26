@@ -258,4 +258,72 @@ def delete_client(client_id: int):
     return {"message": "Client deleted successfully"}
 
 
+class Social(BaseModel):
+    name: str
+    link: str
+    is_active: bool = True
+
+socials = []
+
+
+@app.get("/socials/", response_model=List[Social])
+def get_socials():
+    return socials
+
+
+@app.post("/socials/", status_code=201)
+def create_social(social: Social):
+    socials.append(social)
+    return {"message": "Social created successfully"}
+
+@app.put("/socials/{social_id}")
+def update_social(social_id: int, social: Social):
+    if social_id < 0 or social_id >= len(socials):
+        raise HTTPException(status_code=404, detail="Social not found")
+    socials[social_id] = social
+    return {"message": "Social updated successfully"}
+
+
+@app.delete("/socials/{social_id}")
+def delete_social(social_id: int):
+    if social_id < 0 or social_id >= len(socials):
+        raise HTTPException(status_code=404, detail="Social not found")
+    del socials[social_id]
+    return {"message": "Social deleted successfully"}
+
+
+class Skill(BaseModel):
+    name: str
+    percentage: int
+    is_active: bool = True
+
+
+skills = []
+
+@app.get("/skills/", response_model=List[Skill])
+def get_skills():
+    return skills
+
+
+@app.post("/skills/", status_code=201)
+def create_skill(skill: Skill):
+    skills.append(skill)
+    return {"message": "Skill created successfully"}
+
+
+@app.put("/skills/{skill_id}")
+def update_skill(skill_id: int, skill: Skill):
+    if skill_id < 0 or skill_id >= len(skills):
+        raise HTTPException(status_code=404, detail="Skill not found")
+    skills[skill_id] = skill
+    return {"message": "Skill updated successfully"}
+
+
+@app.delete("/skills/{skill_id}")
+def delete_skill(skill_id: int):
+    if skill_id < 0 or skill_id >= len(skills):
+        raise HTTPException(status_code=404, detail="Skill not found")
+    del skills[skill_id]
+    return {"message": "Skill deleted successfully"}
+
 
