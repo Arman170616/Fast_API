@@ -1,55 +1,59 @@
-from fastapi import FastAPI
-from typing import List
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import List
+
 
 app = FastAPI()
 
-# Mock data to simulate a database
-db = []
+company_info = {
+    "name": "Sicunet INC",
+    "address": "Panthopath, Dahaka, Bangladesh",
+    "founder": "IKE HuH",
+    "founded_year": 2006,
+    "employees": 1000,
+    "website": "https://yourcompany.com",
 
-class BlogPost(BaseModel):
-    title: str
-    content: str
-    author: str
-    published: bool = False
+}
 
-# Example initial data
-db.append(BlogPost(title="First Post", content="Hello, world!", author="John Doe"))
-
-@app.get("/posts", response_model=List[BlogPost])
-def get_posts():
-    return db
-
-@app.get("/posts/{post_id}", response_model=BlogPost)
-def get_post(post_id: int):
-    return db[post_id - 1]
-
-@app.post("/posts", response_model=BlogPost)
-def create_post(post: BlogPost):
-    db.append(post)
-    return post
-
-@app.put("/posts/{post_id}", response_model=BlogPost)
-def update_post(post_id: int, post: BlogPost):
-    db[post_id - 1] = post
-    return post
-
-@app.delete("/posts/{post_id}", response_model=BlogPost)
-def delete_post(post_id: int):
-    deleted_post = db.pop(post_id - 1)
-    return deleted_post
+@app.get("/about")
+def get_company_info():
+    return company_info
 
 
+class Service(BaseModel):
+    name: str
+    description: str
+    price: float
+    is_active: bool = True
 
 
+services = []
 
+@app.get("/services/", response_model=List[Service])
+def get_services():
+    return services
 
-"""
-Use HTTP methods (GET, POST, PUT, DELETE) on the endpoints:
-GET /posts: Get all posts
-GET /posts/{post_id}: Get a specific post
-POST /posts: Create a new post
-PUT /posts/{post_id}: Update a post
-DELETE /posts/{post_id}: Delete a post
+@app.get("/services/{service_id}", response_model=Service)
+def get_service(service_id: int):
+    if service_id < 0 or service_id >= len(services):
+        raise HTTPException(status_code=404, detail="Service not found")
+    return services[service_id]
 
-"""
+@app.post("/services/", status_code=201)
+def create_service(service: Service):
+    services.append(service)
+    return {"message": "Service created successfully"}
+
+@app.put("/services/{service_id}")
+def update_service(service_id: int, service: Service):
+    if service_id < 0 or service_id >= len(services):
+        raise HTTPException(status_code=404, detail="Service not found")
+    services[service_id] = service
+    return {"message": "Service updated successfully"}
+
+@app.delete("/services/{service_id}")
+def delete_service(service_id: int):
+    if service_id < 0 or service_id >= len(services):
+        raise HTTPException(status_code=404, detail="Service not found")
+    del services[service_id]
+    return {"message": "Service deleted successfully"}
