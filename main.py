@@ -433,3 +433,35 @@ def delete_award(award_id: int):
     return {"message": "Award deleted successfully"}
 
 
+
+class Interest(BaseModel):
+    name: str
+    is_active: bool = True
+
+
+interests = []
+
+@app.get("/interests/", response_model=List[Interest])
+def get_interests():
+    return interests
+
+
+@app.post("/interests/", status_code=201)
+def create_interest(interest: Interest):
+    interests.append(interest)
+    return {"message": "Interest created successfully"}
+
+@app.put("/interests/{interest_id}")
+def update_interest(interest_id: int, interest: Interest):
+    if interest_id < 0 or interest_id >= len(interests):
+        raise HTTPException(status_code=404, detail="Interest not found")
+    interests[interest_id] = interest
+    return {"message": "Interest updated successfully"}
+
+@app.delete("/interests/{interest_id}")
+def delete_interest(interest_id: int):
+    if interest_id < 0 or interest_id >= len(interests):
+        raise HTTPException(status_code=404, detail="Interest not found")
+    del interests[interest_id]
+    return {"message": "Interest deleted successfully"}
+
