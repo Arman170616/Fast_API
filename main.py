@@ -327,3 +327,109 @@ def delete_skill(skill_id: int):
     return {"message": "Skill deleted successfully"}
 
 
+
+class Education(BaseModel):
+    name: str
+    degree: str
+    year: str
+    is_active: bool = True
+
+
+educations = []
+
+@app.get("/educations/", response_model=List[Education])
+def get_educations():
+    return educations
+
+
+@app.post("/educations/", status_code=201)
+def create_education(education: Education):
+    educations.append(education)
+    return {"message": "Education created successfully"}
+
+
+@app.put("/educations/{education_id}")
+def update_education(education_id: int, education: Education):
+    if education_id < 0 or education_id >= len(educations):
+        raise HTTPException(status_code=404, detail="Education not found")
+    educations[education_id] = education
+    return {"message": "Education updated successfully"}
+
+@app.delete("/educations/{education_id}")
+def delete_education(education_id: int):
+    if education_id < 0 or education_id >= len(educations):
+        raise HTTPException(status_code=404, detail="Education not found")
+    del educations[education_id]
+    return {"message": "Education deleted successfully"}
+
+
+class Experience(BaseModel):
+    name: str
+    designation: str
+    year: str
+    is_active: bool = True
+
+
+experiences = []
+
+@app.get("/experiences/", response_model=List[Experience])
+def get_experiences():
+    return experiences
+
+
+@app.post("/experiences/", status_code=201)
+def create_experience(experience: Experience):
+    experiences.append(experience)
+    return {"message": "Experience created successfully"}
+
+
+
+@app.put("/experiences/{experience_id}")
+def update_experience(experience_id: int, experience: Experience):
+    if experience_id < 0 or experience_id >= len(experiences):
+        raise HTTPException(status_code=404, detail="Experience not found")
+    experiences[experience_id] = experience
+    return {"message": "Experience updated successfully"}
+
+
+@app.delete("/experiences/{experience_id}")
+def delete_experience(experience_id: int):
+    if experience_id < 0 or experience_id >= len(experiences):
+        raise HTTPException(status_code=404, detail="Experience not found")
+    del experiences[experience_id]
+    return {"message": "Experience deleted successfully"}
+
+
+class Award(BaseModel):
+    name: str
+    year: str
+    is_active: bool = True
+
+
+awards = []
+
+@app.get("/awards/", response_model=List[Award])
+def get_awards():
+    return awards
+
+
+@app.post("/awards/", status_code=201)
+def create_award(award: Award):
+    awards.append(award)
+    return {"message": "Award created successfully"}
+
+@app.put("/awards/{award_id}")
+def update_award(award_id: int, award: Award):
+    if award_id < 0 or award_id >= len(awards):
+        raise HTTPException(status_code=404, detail="Award not found")
+    awards[award_id] = award
+    return {"message": "Award updated successfully"}
+
+@app.delete("/awards/{award_id}")
+def delete_award(award_id: int):
+    if award_id < 0 or award_id >= len(awards):
+        raise HTTPException(status_code=404, detail="Award not found")
+    del awards[award_id]
+    return {"message": "Award deleted successfully"}
+
+
