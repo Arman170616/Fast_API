@@ -155,3 +155,107 @@ def delete_team(team_id: int):
         raise HTTPException(status_code=404, detail="Team not found")
     del teams[team_id]
     return {"message": "Team deleted successfully"}
+
+class Testimonial(BaseModel):
+    name: str
+    designation: str
+    image: str
+    comment: str
+    is_active: bool = True
+
+testimonials = []
+
+
+@app.get("/testimonials/", response_model=List[Testimonial])
+def get_testimonials():
+    return testimonials
+
+
+@app.post("/testimonials/", status_code=201)
+def create_testimonial(testimonial: Testimonial):
+    testimonials.append(testimonial)
+    return {"message": "Testimonial created successfully"}
+
+@app.put("/testimonials/{testimonial_id}")
+def update_testimonial(testimonial_id: int, testimonial: Testimonial):
+    if testimonial_id < 0 or testimonial_id >= len(testimonials):
+        raise HTTPException(status_code=404, detail="Testimonial not found")
+    testimonials[testimonial_id] = testimonial
+    return {"message": "Testimonial updated successfully"}
+
+@app.delete("/testimonials/{testimonial_id}")
+def delete_testimonial(testimonial_id: int):
+    if testimonial_id < 0 or testimonial_id >= len(testimonials):
+        raise HTTPException(status_code=404, detail="Testimonial not found")
+    del testimonials[testimonial_id]
+    return {"message": "Testimonial deleted successfully"}
+
+
+class Blog(BaseModel):
+    title: str
+    description: str
+    image: str
+    link: str
+    is_active: bool = True
+
+blogs = []
+
+@app.get("/blogs/", response_model=List[Blog])
+def get_blogs():
+    return blogs
+
+
+@app.post("/blogs/", status_code=201)
+def create_blog(blog: Blog):
+    blogs.append(blog)
+    return {"message": "Blog created successfully"}
+
+@app.put("/blogs/{blog_id}")
+def update_blog(blog_id: int, blog: Blog):
+    if blog_id < 0 or blog_id >= len(blogs):
+        raise HTTPException(status_code=404, detail="Blog not found")
+    blogs[blog_id] = blog
+    return {"message": "Blog updated successfully"}
+
+
+@app.delete("/blogs/{blog_id}")
+def delete_blog(blog_id: int):
+    if blog_id < 0 or blog_id >= len(blogs):
+        raise HTTPException(status_code=404, detail="Blog not found")
+    del blogs[blog_id]
+    return {"message": "Blog deleted successfully"}
+
+
+class Client(BaseModel):
+    name: str
+    image: str
+    is_active: bool = True
+
+clients = []
+
+
+@app.get("/clients/", response_model=List[Client])
+def get_clients():
+    return clients
+
+@app.post("/clients/", status_code=201)
+def create_client(client: Client):
+    clients.append(client)
+    return {"message": "Client created successfully"}
+
+@app.put("/clients/{client_id}")
+def update_client(client_id: int, client: Client):
+    if client_id < 0 or client_id >= len(clients):
+        raise HTTPException(status_code=404, detail="Client not found")
+    clients[client_id] = client
+    return {"message": "Client updated successfully"}
+
+@app.delete("/clients/{client_id}")
+def delete_client(client_id: int):
+    if client_id < 0 or client_id >= len(clients):
+        raise HTTPException(status_code=404, detail="Client not found")
+    del clients[client_id]
+    return {"message": "Client deleted successfully"}
+
+
+
