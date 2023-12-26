@@ -57,3 +57,36 @@ def delete_service(service_id: int):
         raise HTTPException(status_code=404, detail="Service not found")
     del services[service_id]
     return {"message": "Service deleted successfully"}
+
+
+class Contact(BaseModel):
+    name: str
+    email: str
+    message: str
+
+contacts = []
+
+@app.get("/contacts/", response_model=List[Contact])
+def get_contacts():
+    return contacts
+
+@app.post("/contacts/", status_code=201)
+def create_contact(contact: Contact):
+    contacts.append(contact)
+    return {"message": "Contact created successfully"}
+
+
+@app.put("/contacts/{contact_id}")
+def update_contact(contact_id: int, contact: Contact):
+    if contact_id < 0 or contact_id >= len(contacts):
+        raise HTTPException(status_code=404, detail="Contact not found")
+    contacts[contact_id] = contact
+    return {"message": "Contact updated successfully"}
+
+@app.delete("/contacts/{contact_id}")
+def delete_contact(contact_id: int):
+    if contact_id < 0 or contact_id >= len(contacts):
+        raise HTTPException(status_code=404, detail="Contact not found")
+    del contacts[contact_id]
+    return {"message": "Contact deleted successfully"}
+
