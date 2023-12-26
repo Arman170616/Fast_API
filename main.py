@@ -465,3 +465,70 @@ def delete_interest(interest_id: int):
     del interests[interest_id]
     return {"message": "Interest deleted successfully"}
 
+
+class Language(BaseModel):
+    name: str
+    is_active: bool = True
+
+
+languages = []
+
+@app.get("/languages/", response_model=List[Language])
+def get_languages():
+    return languages
+
+
+@app.post("/languages/", status_code=201)
+def create_language(language: Language):
+    languages.append(language)
+    return {"message": "Language created successfully"}
+
+
+@app.put("/languages/{language_id}")
+def update_language(language_id: int, language: Language):
+    if language_id < 0 or language_id >= len(languages):
+        raise HTTPException(status_code=404, detail="Language not found")
+    languages[language_id] = language
+    return {"message": "Language updated successfully"}
+
+
+@app.delete("/languages/{language_id}")
+def delete_language(language_id: int):
+    if language_id < 0 or language_id >= len(languages):
+        raise HTTPException(status_code=404, detail="Language not found")
+    del languages[language_id]
+    return {"message": "Language deleted successfully"}
+
+class Reference(BaseModel):
+    name: str
+    designation: str
+    image: str
+    is_active: bool = True
+
+references = []
+
+
+@app.get("/references/", response_model=List[Reference])
+def get_references():
+    return references
+
+
+@app.post("/references/", status_code=201)
+def create_reference(reference: Reference):
+    references.append(reference)
+    return {"message": "Reference created successfully"}
+
+@app.put("/references/{reference_id}")
+def update_reference(reference_id: int, reference: Reference):
+    if reference_id < 0 or reference_id >= len(references):
+        raise HTTPException(status_code=404, detail="Reference not found")
+    references[reference_id] = reference
+    return {"message": "Reference updated successfully"}
+
+@app.delete("/references/{reference_id}")
+def delete_reference(reference_id: int):
+    if reference_id < 0 or reference_id >= len(references):
+        raise HTTPException(status_code=404, detail="Reference not found")
+    del references[reference_id]
+    return {"message": "Reference deleted successfully"}
+
