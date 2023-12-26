@@ -90,3 +90,36 @@ def delete_contact(contact_id: int):
     del contacts[contact_id]
     return {"message": "Contact deleted successfully"}
 
+
+class Projects(BaseModel):
+    name: str
+    description: str
+    image: str
+    link: str
+    is_active: bool = True
+
+projects = []
+
+@app.get("/projects/", response_model=List[Projects])
+def get_projects():
+    return projects
+
+@app.post("/projects/", status_code=201)
+def create_project(project: Projects):
+    projects.append(project)
+    return {"message": "Project created successfully"}
+
+@app.put("/projects/{project_id}")
+def update_project(project_id: int, project: Projects):
+    if project_id < 0 or project_id >= len(projects):
+        raise HTTPException(status_code=404, detail="Project not found")
+    projects[project_id] = project
+    return {"message": "Project updated successfully"}
+
+@app.delete("/projects/{project_id}")
+def delete_project(project_id: int):
+    if project_id < 0 or project_id >= len(projects):
+        raise HTTPException(status_code=404, detail="Project not found")
+    del projects[project_id]
+    return {"message": "Project deleted successfully"}
+
