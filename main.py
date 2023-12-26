@@ -123,3 +123,35 @@ def delete_project(project_id: int):
     del projects[project_id]
     return {"message": "Project deleted successfully"}
 
+class Team(BaseModel):
+    name: str
+    designation: str
+    image: str
+    is_active: bool = True
+
+teams = []
+
+
+@app.get("/teams/", response_model=List[Team])
+def get_teams():
+    return teams
+
+@app.post("/teams/", status_code=201)
+def create_team(team: Team):
+    teams.append(team)
+    return {"message": "Team created successfully"}
+
+
+@app.put("/teams/{team_id}")
+def update_team(team_id: int, team: Team):
+    if team_id < 0 or team_id >= len(teams):
+        raise HTTPException(status_code=404, detail="Team not found")
+    teams[team_id] = team
+    return {"message": "Team updated successfully"}
+
+@app.delete("/teams/{team_id}")
+def delete_team(team_id: int):
+    if team_id < 0 or team_id >= len(teams):
+        raise HTTPException(status_code=404, detail="Team not found")
+    del teams[team_id]
+    return {"message": "Team deleted successfully"}
